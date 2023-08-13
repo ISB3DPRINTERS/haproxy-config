@@ -1,0 +1,26 @@
+frontend isb3dprinters
+  bind :80
+
+  # route to a backend based on path's prefix
+  use_backend octo1 if { path /printer1 } || { path_beg /printer1/ }
+  use_backend octo2 if { path /printer2 } || { path_beg /printer2/ }
+  use_backend octo3 if { path /printer3 } || { path_beg /printer3/ }
+  use_backend octo4 if { path /printer4 } || { path_beg /printer4/ }
+
+backend octo1
+  # strip the prefix off of the path
+  http-request replace-path /printer1(/)?(.*) /\2
+  server server1 127.0.0.1:8081 check maxconn 5
+
+backend octo2
+  # strip the prefix off of the path
+  http-request replace-path /printer2(/)?(.*) /\2
+  server server1 127.0.0.1:8002 check maxconn 5
+backend octo3
+  # strip the prefix off of the path
+  http-request replace-path /printer3(/)?(.*) /\2
+  server server1 127.0.0.1:8003 check maxconn 5
+backend octo4
+  # strip the prefix off of the path
+  http-request replace-path /printer4(/)?(.*) /\2
+  server server1 127.0.0.1:8004 check maxconn 5

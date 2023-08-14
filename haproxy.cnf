@@ -7,11 +7,19 @@ frontend isb3dprinters
   use_backend octo3 if { path /printer3 } || { path_beg /printer3/ }
   use_backend octo4 if { path /printer4 } || { path_beg /printer4/ }
 
+defaults
+  retries           3
+  maxconn           2000
+  timeout connect   50s
+  timeout client    50s
+  timeout server    50s
+  resolvers docker_resolver
+  nameserver dns 127.0.0.11:53
+
 backend octo1
   # strip the prefix off of the path
   http-request replace-path /printer1(/)?(.*) /\2
   server server1 127.0.0.1:8081 check maxconn 5
-
 backend octo2
   # strip the prefix off of the path
   http-request replace-path /printer2(/)?(.*) /\2
